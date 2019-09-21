@@ -1,0 +1,49 @@
+version: '2'
+
+networks:
+  custom:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.61.0/24
+
+volumes: 
+  workspace: 
+  
+services:
+  control:
+    image: codespaces/ansible-control:v2.0.3
+    ports:
+      - "8000:8000"
+    volumes:
+      - workspace:/workspace
+    networks:
+      custom:
+        ipv4_address: 192.168.61.10
+    dns: 8.8.8.8
+    domainname: codespaces.io
+    hostname: control
+    restart: always
+  app1:
+    image: codespaces/ansible-node-centos-6:v0.3.6
+    ports:
+       - "81:80"
+    networks:
+      custom:
+        ipv4_address: 192.168.61.12
+    dns: 8.8.8.8
+    domainname: codespaces.io
+    hostname: app1
+    restart: always
+  app2:
+    image: codespaces/ansible-node-centos-6:v0.3.6
+    ports:
+      - "82:80"
+    networks:
+      custom:
+        ipv4_address: 192.168.61.13
+    dns: 8.8.8.8
+    domainname: codespaces.io
+    hostname: app2
+    restart: always
